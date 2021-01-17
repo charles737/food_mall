@@ -15,8 +15,8 @@ type UserService struct {
 }
 
 type UserSrv interface {
-	List(req query.ListQuery) (users []*model.User, err error)
-	GetTotal(req query.ListQuery) (total int, err error)
+	List(req *query.ListQuery) (users []*model.User, err error)
+	GetTotal(req *query.ListQuery) (total int, err error)
 	Get(user model.User) (*model.User, error)
 	Exist(user model.User) *model.User
 	ExistByUserID(id string) *model.User

@@ -35,6 +35,7 @@ func (h *UserHandler) UserInfoHandler(c *gin.Context) {
 		TotalPage: 1,
 		Data: nil,
 	}
+
 	userId := c.Param("id")
 	if userId == "" {
 		c.JSON(http.StatusInternalServerError, gin.H{"entity": entity})
@@ -63,8 +64,6 @@ func (h *UserHandler) UserInfoHandler(c *gin.Context) {
 }
 
 func (h *UserHandler) UserListHandler(c *gin.Context) {
-	var q query.ListQuery
-
 	entity := resp.Entity{
 		Code: int(enum.OperateFail),
 		Msg: enum.OperateFail.String(),
@@ -73,6 +72,7 @@ func (h *UserHandler) UserListHandler(c *gin.Context) {
 		Data: nil,
 	}
 
+	var q query.ListQuery
 	err := c.ShouldBindQuery(&q)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"entity": entity})
@@ -143,5 +143,56 @@ func (h *UserHandler) AddUserHandler(c *gin.Context)  {
 }
 
 func (h *UserHandler) EditUserHandler(c *gin.Context) {
-	
+	entity := resp.Entity{
+		Code: int(enum.OperateFail),
+		Msg: enum.OperateFail.String(),
+		Total: 0,
+		Data: nil,
+	}
+
+	u := model.User{}
+	err := c.ShouldBindJSON(&u)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+		return
+	}
+
+	b, err := h.UserSrv.Edit(u)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+		return
+	}
+
+	if b {
+		entity.Code = int(enum.OperateOk)
+		entity.Msg = enum.OperateOk.String()
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+	}
+}
+
+func (h *UserHandler) DeleteUserHandler(c *gin.Context) {
+	entity := resp.Entity{
+		Code: int(enum.OperateFail),
+		Msg: enum.OperateFail.String(),
+		Total: 0,
+		Data: nil,
+	}
+
+	id := c.Param("id")
+	if id == "" {
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+		return
+	}
+
+	b, err := h.UserSrv.Delete(id)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+		return
+	}
+
+	if b {
+		entity.Code = int(enum.OperateOk)
+		entity.Msg = enum.OperateOk.String()
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+	}
 }
