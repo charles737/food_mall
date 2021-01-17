@@ -9,11 +9,11 @@ type Product struct {
 	CategoryId string `json:"categoryId"`
 	ProductCoverImg string `json:"productCoverImg"`
 	ProductBanner string `json:"productBanner"`
-	OriginalPrice string `json:"originalPrice"`
-	SellingPrice string `json:"sellingPrice"`
-	StockNum string `json:"stockNum"`
+	OriginalPrice int `json:"originalPrice"`
+	SellingPrice int `json:"sellingPrice"`
+	StockNum int `json:"stockNum"`
 	Tag string `json:"tag"`
-	SellStatus string `json:"sellStatus"`
+	SellStatus int `json:"sellStatus"`
 	ProductDetailContent string `json:"productDetailContent"`
 	IsDeleted bool `json:"isDeleted"`
 }
