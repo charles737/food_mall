@@ -15,9 +15,9 @@ var (
 
 /*
 	Page 分页
-	Limit 要查询的记录数
-	Page 页码
-	offset 偏移量
+	Limit --> req.PageSize 指定获取记录的最大数量
+	Page --> req.Page 页码 当前页
+	offset 指定在开始返回记录之前要跳过的记录数量
  */
 func Page(Limit, Page int) (limit, offset int) {
 	if Limit > 0 {
