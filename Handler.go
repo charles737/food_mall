@@ -1,4 +1,4 @@
-package food_mall
+package main
 
 import (
 	"fmt"
@@ -16,6 +16,7 @@ import (
 var (
 	DB *gorm.DB
 	UserHandler handler.UserHandler
+	ProductHandler handler.ProductHandler
 )
 
 func initViper() {
@@ -58,6 +59,13 @@ func initHandler() {
 	UserHandler = handler.UserHandler{
 		UserSrv: &service.UserService{
 			Repo: &repository.UserRepository{
+				DB: DB,
+			},
+		}}
+
+	ProductHandler = handler.ProductHandler{
+		ProductSrv: &service.ProductService{
+			Repo: &repository.ProductRepository{
 				DB: DB,
 			},
 		}}
