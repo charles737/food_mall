@@ -37,9 +37,9 @@ func (repo *UserRepository) List(req *query.ListQuery) (users []*model.User, err
 }
 
 func (repo *UserRepository) GetTotal(req *query.ListQuery) (total int, err error) {
-	var users []model.User
+	var users []*model.User
 
-	if err := repo.DB.Find(&users).Count(&total).Error; err != nil {
+	if err := repo.DB.Find(users).Count(&total).Error; err != nil {
 		return total, err
 	}
 	return total, nil

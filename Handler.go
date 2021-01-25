@@ -17,6 +17,8 @@ var (
 	DB *gorm.DB
 	UserHandler handler.UserHandler
 	ProductHandler handler.ProductHandler
+	OrderHandler handler.OrderHandler
+	BannerHandler handler.BannerHandler
 )
 
 func initViper() {
@@ -66,6 +68,20 @@ func initHandler() {
 	ProductHandler = handler.ProductHandler{
 		ProductSrv: &service.ProductService{
 			Repo: &repository.ProductRepository{
+				DB: DB,
+			},
+		}}
+
+	OrderHandler = handler.OrderHandler{
+		OrderSrv: &service.OrderService{
+			Repo: &repository.OrderRepository{
+				DB: DB,
+			},
+		}}
+
+	BannerHandler = handler.BannerHandler{
+		BannerSrv: &service.BannerService{
+			Repo: &repository.BannerRepository{
 				DB: DB,
 			},
 		}}

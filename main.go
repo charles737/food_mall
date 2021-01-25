@@ -1,10 +1,9 @@
 package main
 
 import (
-	"food_mall/handler"
-	"net/http"
-	"github.com/spf13/viper"
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
+	"net/http"
 )
 
 func Cors() gin.HandlerFunc {
@@ -44,6 +43,24 @@ func main() {
 		product.POST("/add", ProductHandler.AddProductHandler)
 		product.POST("/edit", ProductHandler.EditProductHandler)
 		product.POST("/delete", ProductHandler.DeleteProductHandler)
+	}
+
+	order := r.Group("/api/order")
+	{
+		order.GET("/list", OrderHandler.OrderListHandler)
+		order.GET("/info/:id", OrderHandler.OrderInfoHandler)
+		order.POST("/add", OrderHandler.AddOrderHandler)
+		order.POST("/edit", OrderHandler.EditOrderHandler)
+		order.POST("/delete", OrderHandler.DeleteHandler)
+	}
+
+	banner := r.Group("/api/banner")
+	{
+		banner.GET("/list", BannerHandler.BannerListHandler)
+		banner.GET("/info/:id", BannerHandler.BannerInfoHandler)
+		banner.POST("/add", BannerHandler.AddBannerHandler)
+		banner.POST("/edit", BannerHandler.EditBannerHandler)
+		banner.POST("/delete/:id", BannerHandler.DeleteBannerHandler)
 	}
 
 	port := viper.GetString("port")

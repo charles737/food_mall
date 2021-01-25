@@ -7,7 +7,7 @@ type Order struct {
 	UserId string `json:"userId"`
 	NickName string `json:"nickName"`
 	Mobile string `json:"mobile"`
-	TotalPrice string `json:"totalPrice"`
+	TotalPrice int64 `json:"totalPrice"`
 	PayStatus int `json:"payStatus"`
 	PayType int `json:"payType"`
 	PayTime string `json:"payTime"`

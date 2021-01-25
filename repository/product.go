@@ -37,7 +37,7 @@ func (repo *ProductRepository) List(req *query.ListQuery) (products []*model.Pro
 
 func (repo *ProductRepository) GetTotal(req *query.ListQuery) (total int, err error) {
 	var products []*model.Product
-	if err := repo.DB.Find(&products).Count(&total).Error; err != nil {
+	if err := repo.DB.Find(products).Count(&total).Error; err != nil {
 		return total, err
 	}
 	return total, nil
@@ -78,7 +78,7 @@ func (repo *ProductRepository) Add(product model.Product) (*model.Product, error
 
 func (repo *ProductRepository) Edit(product model.Product) (bool, error) {
 	if product.ProductId == "" {
-		return false, fmt.Errorf("请输入要更新的商品ID")
+		return false, fmt.Errorf("请输入要编辑的商品ID")
 	}
 	err := repo.DB.Model(&product).Where("product_id=?", product.ProductId).Updates(map[string]interface{}{
 		"product_name": product.ProductName,
