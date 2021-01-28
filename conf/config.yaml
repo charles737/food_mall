@@ -1,6 +1,6 @@
-mode: dev
-port: :9090
-url: http://127.0.0.1:9090
+mode: debug
+port: :9091
+url: http://127.0.0.1:9091
 max_check_count: 10
 database:
   name: happy_mall

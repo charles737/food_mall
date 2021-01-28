@@ -32,7 +32,7 @@ func initDB() {
 
 	conf := &model.DBConf{
 		Host: viper.GetString("database.host"),
-		User: viper.GetString("database.user"),
+		User: viper.GetString("database.username"),
 		Password: viper.GetString("database.password"),
 		DbName: viper.GetString("database.name"),
 	}
@@ -43,8 +43,7 @@ func initDB() {
 		conf.Host,
 		conf.DbName,
 		true,
-		"Local",
-		)
+		"Local")
 
 	var err error
 	// 这里不要使用 := ，会和 config 重复声明变量

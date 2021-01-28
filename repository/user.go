@@ -30,7 +30,7 @@ func (repo *UserRepository) List(req *query.ListQuery) (users []*model.User, err
 	// 分页
 	limit, offset := utils.Page(req.PageSize, req.Page)
 
-	if err := repo.DB.Order("order desc").Limit(limit).Offset(offset).Find(&users).Error; err != nil {
+	if err := repo.DB.Order("user_id desc").Limit(limit).Offset(offset).Find(&users).Error; err != nil {
 		return nil, err
 	}
 	return users, nil
