@@ -36,8 +36,8 @@ func (repo *ProductRepository) List(req *query.ListQuery) (products []*model.Pro
 }
 
 func (repo *ProductRepository) GetTotal(req *query.ListQuery) (total int, err error) {
-	var products []*model.Product
-	if err := repo.DB.Find(products).Count(&total).Error; err != nil {
+	var products []model.Product
+	if err := repo.DB.Find(&products).Count(&total).Error; err != nil {
 		return total, err
 	}
 	return total, nil

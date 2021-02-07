@@ -35,9 +35,9 @@ func (repo *OrderRepository) List(req *query.ListQuery) (orders []*model.Order, 
 }
 
 func (repo *OrderRepository) GetTotal(req *query.ListQuery) (total int, err error) {
-	var orders []*model.Order
+	var orders []model.Order
 
-	if err := repo.DB.Find(orders).Count(&total).Error; err != nil {
+	if err := repo.DB.Find(&orders).Count(&total).Error; err != nil {
 		return total, err
 	}
 	return total, nil
