@@ -95,8 +95,8 @@ func (h *ProductHandler) ProductListHandler(c *gin.Context)  {
 		q.PageSize = 5
 	}
 
-	ret := int(total % q.PageSize)
-	ret2 := int(total / q.PageSize)
+	ret := total % q.PageSize
+	ret2 := total / q.PageSize
 	totalPage := 0
 	if ret == 0 {
 		totalPage = ret2

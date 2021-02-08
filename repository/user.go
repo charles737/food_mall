@@ -55,7 +55,7 @@ func (repo *UserRepository) Get(user model.User) (*model.User, error) {
 func (repo *UserRepository) Exist(user model.User) *model.User {
 	var count int
 
-	repo.DB.Find(&user).Where("nick_name=?", user.NickName)
+	repo.DB.Find(&user).Where("nick_name=?", user.NickName).Count(&count)
 	if count > 0 {
 		return &user
 	}
@@ -73,7 +73,7 @@ func (repo *UserRepository) ExistByMobile(mobile string) *model.User {
 	var user model.User
 	var count int
 
-	repo.DB.Where("mobile=?", mobile).Find(&user)
+	repo.DB.Where("mobile=?", mobile).Find(&user).Count(&count)
 	if count > 0 {
 		return &user
 	}
