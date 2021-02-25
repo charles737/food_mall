@@ -1,0 +1,199 @@
+package handler
+
+import (
+	"food_mall/enum"
+	"food_mall/model"
+	"food_mall/query"
+	"food_mall/resp"
+	"food_mall/service"
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
+
+type OrderHandler struct {
+	OrderSrv service.OrderSrv
+}
+
+func (h *OrderHandler) GetEntity(result model.Order) resp.Order {
+	return resp.Order{
+		Id: result.OrderId,
+		Key: result.OrderId,
+		OrderId: result.OrderId,
+		UserId: result.UserId,
+		NickName: result.NickName,
+		Mobile: result.Mobile,
+		TotalPrice: result.TotalPrice,
+		PayStatus: result.PayStatus,
+		PayType: result.PayType,
+		PayTime: result.PayTime,
+		OrderStatus: result.OrderStatus,
+		ExtraInfo: result.ExtraInfo,
+		UserAddress: result.UserAddress,
+		IsDeleted: result.IsDeleted,
+	}
+}
+
+func (h *OrderHandler) OrderInfoHandler(c *gin.Context) {
+	entity := resp.Entity{
+		Code: int(enum.OperateFail),
+		Msg: enum.OperateFail.String(),
+		Total: 0,
+		TotalPage: 1,
+		Data: nil,
+	}
+
+	orderId := c.Param("id")
+	if orderId == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{"entity": entity})
+		return
+	}
+
+	o := model.Order{
+		OrderId: orderId,
+	}
+
+	result, err := h.OrderSrv.Get(o)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"entity": entity})
+		return
+	}
+
+	r := h.GetEntity(*result)
+	entity = resp.Entity{
+		Code: http.StatusOK,
+		Msg: "OK",
+		Total: 0,
+		TotalPage: 0,
+		Data: r,
+	}
+	c.JSON(http.StatusOK, gin.H{"entity": entity})
+}
+
+func (h *OrderHandler) OrderListHandler(c *gin.Context) {
+	entity := resp.Entity{
+		Code: int(enum.OperateFail),
+		Msg: enum.OperateFail.String(),
+		Total: 0,
+		TotalPage: 1,
+		Data: nil,
+	}
+
+	var q query.ListQuery
+	err := c.ShouldBindQuery(&q)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"entity": entity})
+		return
+	}
+
+	list, err := h.OrderSrv.List(&q)
+	total, err := h.OrderSrv.GetTotal(&q)
+	if err != nil {
+		panic(err)
+	}
+
+	if q.PageSize == 0 {
+		q.PageSize = 5
+	}
+
+	ret := total % q.PageSize
+	ret2 := total / q.PageSize
+	totalPage := 0
+	if ret == 0 {
+		totalPage = ret2
+	} else {
+		totalPage = ret2 + 1
+	}
+
+	var newList []*resp.Order
+	for _, item := range list {
+		r := h.GetEntity(*item)
+		newList = append(newList, &r)
+	}
+
+	entity = resp.Entity{
+		Code: http.StatusOK,
+		Msg: "OK",
+		Total: total,
+		TotalPage: totalPage,
+		Data: newList,
+	}
+	c.JSON(http.StatusOK, gin.H{"entity": entity})
+}
+
+func (h *OrderHandler) AddOrderHandler(c *gin.Context) {
+	entity := resp.Entity{
+		Code: int(enum.OperateFail),
+		Msg: enum.OperateFail.String(),
+		Total: 0,
+		Data: nil,
+	}
+
+	o := model.Order{}
+	err := c.ShouldBindJSON(&o)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+		return
+	}
+
+	r, err := h.OrderSrv.Add(o)
+	if err != nil {
+		entity.Msg = err.Error()
+		return
+	}
+	if r.OrderId == "" {
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+		return
+	}
+	entity.Code = int(enum.OperateOk)
+	entity.Msg = enum.OperateOk.String()
+	c.JSON(http.StatusOK, gin.H{"entity": entity})
+}
+
+func (h *OrderHandler) EditOrderHandler(c *gin.Context) {
+	entity := resp.Entity{
+		Code: int(enum.OperateFail),
+		Msg: enum.OperateFail.String(),
+		Total: 0,
+		Data: nil,
+	}
+
+	o := model.Order{}
+	err := c.ShouldBindJSON(&o)
+	if err != nil || o.OrderId == "" {
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+		return
+	}
+
+	b, err := h.OrderSrv.Edit(o)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+		return
+	}
+	if b {
+		entity.Code = int(enum.OperateOk)
+		entity.Msg = enum.OperateOk.String()
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+	}
+}
+
+func (h *OrderHandler) DeleteHandler(c *gin.Context) {
+	entity := resp.Entity{
+		Code: int(enum.OperateFail),
+		Msg: enum.OperateFail.String(),
+		Total: 0,
+		Data: nil,
+	}
+
+	id := c.Param("id")
+	r := h.OrderSrv.ExistByOrderID(id)
+	b, err := h.OrderSrv.Delete(*r)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+		return
+	}
+	if b {
+		entity.Code = http.StatusOK
+		entity.Msg = enum.OperateOk.String()
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+	}
+}
