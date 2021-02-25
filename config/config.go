@@ -35,7 +35,7 @@ func (c *Config) initConfig() error {
 		// 如果指定了配置文件，解析指定的配置文件
 		viper.SetConfigFile(c.Name)
 	} else {
-		// 如果没有指定配置文件，添加配置文件路径、名称
+		// 如果没有指定配置文件，则解析默认的配置文件
 		viper.AddConfigPath("conf")
 		viper.SetConfigName("config")
 	}

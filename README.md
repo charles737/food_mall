@@ -1,1 +1,1 @@
-吃货商城，使用Golang进行构建。
+料理商城，使用 Golang + Gin + GORM 构建
